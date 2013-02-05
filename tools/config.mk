@@ -2,10 +2,12 @@
 
 NAME?=$(shell basename $(CURDIR))
 PKGNAME?=$(NAME)-$(VER)
+URLSUBDIR?=$(PKGNAME)
 SRCEXT?=tar.xz
-SRCURL?=$(URLBASE)/$(PKGNAME)/$(PKGNAME).$(SRCEXT)
+SRCURL?=$(URLBASE)/$(URLSUBDIR)/$(PKGNAME).$(SRCEXT)
 SRCPKG?=$(PKGNAME).$(SRCEXT)
-SRCDIR?=./$(PKGNAME)
+SRCDIR?=$(CURDIR)/$(PKGNAME)
+DESTDIR?=$(CURDIR)/dest
 TARGETPKG?=$(CURDIR)/../packages/$(PKGNAME).tar.xz
 
 all: package
@@ -44,10 +46,11 @@ $(SRCPKG):
 
 .dd: .bd
 	@echo [DEST]
-	cd $(SRCDIR) && make DESTDIR=$(CURDIR)/dest install
+	rm -rf $(DESTDIR)
+	cd $(SRCDIR) && make DESTDIR=$(DESTDIR) install
 	touch $@
 
 $(TARGETPKG): .dd
-	cd dest && tar cJf $@ .
+	cd $(DESTDIR) && tar cJf $@ .
 
 
