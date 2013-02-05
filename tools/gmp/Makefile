@@ -25,7 +25,7 @@ package:
 	cd dest && \
 		tar cJf ${CURDIR}/${P}.tar.xz .
 
-install: package
+install:
 	tar xJf ${CURDIR}/${P}.tar.xz -C ${ROOT}
 
 clean:
