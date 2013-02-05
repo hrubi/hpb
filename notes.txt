@@ -1,0 +1,13 @@
+build & package manager - wrapper around make
+
+make targets:
+
+fetch       - download source/patches
+extract     - unpack source
+patch       - apply patches
+configure   - configure the source
+build       - compile source
+package     - create installable package
+install     - install the package
+
+all         - fetch extract patch configure build package
