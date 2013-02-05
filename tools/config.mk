@@ -36,7 +36,7 @@ $(SRCPKG):
 .cf: .ex
 	@echo [CONFIG]
 	cd $(SRCDIR) && \
-		CPPFLAGS=$(CPPFLAGS) ./configure --prefix=$(CURDIR)/tools
+		$(CFGVARS) ./configure $(CFGFLAGS)
 	touch $@
 
 .bd: .cf
