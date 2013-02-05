@@ -11,10 +11,10 @@ TARGETPKG?=$(CURDIR)/../packages/$(PKGNAME).tar.xz
 all: package
 
 fetch: $(SRCPKG)
-extract: $(SRCDIR).ex
-config: $(SRCDIR).cf
-build: $(SRCDIR).bd
-dest: $(SRCDIR).dd
+extract: .ex
+config: .cf
+build: .bd
+dest: .dd
 package: $(TARGETPKG)
 
 clean:
@@ -25,29 +25,29 @@ $(SRCPKG):
 	@echo [FETCH] 
 	curl -# -C - $(SRCURL) -o $(SRCPKG)
 
-$(SRCDIR).ex: $(SRCPKG)
+.ex: $(SRCPKG)
 	@echo [EXTRACT]
 	tar xf $^
 	touch $@
 	
 
-$(SRCDIR).cf: $(SRCDIR).ex
+.cf: .ex
 	@echo [CONFIG]
 	cd $(SRCDIR) && \
-		CPPFLAGS=-fexceptions ./configure --prefix=$(CURDIR)/tools
+		CPPFLAGS=$(CPPFLAGS) ./configure --prefix=$(CURDIR)/tools
 	touch $@
 
-$(SRCDIR).bd: $(SRCDIR).cf
+.bd: .cf
 	@echo [BUILD]
 	cd $(SRCDIR) && make $(MAKEOPTS)
 	touch $@
 
-$(SRCDIR).dd: $(SRCDIR).bd
+.dd: .bd
 	@echo [DEST]
 	cd $(SRCDIR) && make DESTDIR=$(CURDIR)/dest install
 	touch $@
 
-$(TARGETPKG): $(SRCDIR).dd
+$(TARGETPKG): .dd
 	cd dest && tar cJf $@ .
 
 
