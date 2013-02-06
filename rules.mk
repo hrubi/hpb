@@ -97,5 +97,5 @@ $(STAMP_DEST): $(STAMP_BUILT)
 $(TARGETPKG): dest
 	mkdir -p $(PKGDIR)
 	cd $(DESTDIR) && \
-		tar cJf $@ .
+		tar cJf $@ *
 
