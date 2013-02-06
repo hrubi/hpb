@@ -1,3 +1,4 @@
+TOPDIR=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 NAME?=$(shell basename $(CURDIR))
 PKGNAME?=$(NAME)-$(VER)
 SRCEXT?=tar.xz
@@ -5,7 +6,7 @@ SRCPKG?=$(PKGNAME).$(SRCEXT)
 SRCURL?=$(URLBASE)/$(SRCPKG)
 SRCDIR?=$(CURDIR)/$(PKGNAME)
 DESTDIR?=$(CURDIR)/dest
-PKGDIR?=$(CURDIR)/../packages
+PKGDIR?=$(TOPDIR)/packages
 TARGETPKG?=$(PKGDIR)/$(PKGNAME).tar.xz
 
 STAMP_EXTRACTED=.ex

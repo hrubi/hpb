@@ -6,3 +6,4 @@ CFG_VARS=LDFLAGS="-Wl,-rpath,${FIXME}/tools/lib"
 CFG_FLAGS=--prefix=${FIXME}/tools --with-gmp=${FIXME}/tools --with-mpfr=${FIXME}/tools
 
 include ../../rules.mk
+include ../toolchain.mk
