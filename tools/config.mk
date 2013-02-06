@@ -1,4 +1,4 @@
-## Set VER and URLBASE then include this
+
 
 NAME?=$(shell basename $(CURDIR))
 PKGNAME?=$(NAME)-$(VER)
@@ -8,7 +8,11 @@ SRCPKG?=$(PKGNAME).$(SRCEXT)
 SRCURL?=$(URLBASE)/$(URLSUBDIR)/$(SRCPKG)
 SRCDIR?=$(CURDIR)/$(PKGNAME)
 DESTDIR?=$(CURDIR)/dest
-TARGETPKG?=$(CURDIR)/../packages/$(PKGNAME).tar.xz
+PKGDIR?=$(CURDIR)/../packages
+TARGETPKG?=$(PKGDIR)/$(PKGNAME).tar.xz
+CFGCMD?=./configure 
+
+.PHONY: all package fetch extract config build dest clean
 
 all: package
 
@@ -20,7 +24,7 @@ dest: .dd
 package: $(TARGETPKG)
 
 clean:
-	rm -rf $(TARGETPKG) $(SRCPKG) $(SRCDIR) $(SRCDIR).{ex,cf,bd,dd} dest
+	rm -rf $(TARGETPKG) $(SRCPKG) $(SRCDIR) .{ex,cf,bd,dd} dest
 
 
 $(SRCPKG):
@@ -33,24 +37,24 @@ $(SRCPKG):
 	touch $@
 	
 
-.cf: .ex
+.cf: extract
 	@echo [CONFIG]
 	cd $(SRCDIR) && \
-		$(CFGVARS) ./configure $(CFGFLAGS)
+		$(CFGVARS) $(CFGCMD) $(CFGFLAGS)
 	touch $@
 
-.bd: .cf
+.bd: config
 	@echo [BUILD]
 	cd $(SRCDIR) && make $(MAKEOPTS)
 	touch $@
 
-.dd: .bd
+.dd: build
 	@echo [DEST]
 	rm -rf $(DESTDIR)
 	cd $(SRCDIR) && make DESTDIR=$(DESTDIR) install
 	touch $@
 
-$(TARGETPKG): .dd
+$(TARGETPKG): dest
 	cd $(DESTDIR) && tar cJf $@ .
 
 
