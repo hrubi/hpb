@@ -56,12 +56,12 @@ clean:
 
 $(SRCPKGPATH):
 	@echo [FETCH]
-	mkdir -p $(SRCDIR)
+	@mkdir -p $(SRCDIR)
 	$(fetch)
 
 $(STAMP_EXTRACTED): $(SRCPKGPATH)
 	@echo [EXTRACT]
-	mkdir -p $(WORKDIR)
+	@mkdir -p $(WORKDIR)
 	$(extract)
 	@touch $@
 
@@ -84,13 +84,13 @@ $(STAMP_BUILT): $(STAMP_CONFIGURED)
 
 $(STAMP_DEST): $(STAMP_BUILT)
 	@echo [DEST]
-	mkdir -p $(DESTDIR)
+	@mkdir -p $(DESTDIR)
 	$(dest)
 	@touch $@
 
 $(TARGETPKG): $(STAMP_DEST)
 	@echo [PACKAGE]
-	mkdir -p $(PKGDIR)
+	@mkdir -p $(PKGDIR)
 	cd $(DESTDIR) && \
 		tar cJf $@ *
 
