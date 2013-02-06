@@ -1,3 +1,4 @@
+NAME=test
 VER=1.2.3
 URLBASE=http://chujstym
 
