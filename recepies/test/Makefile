@@ -24,6 +24,5 @@ define build
 endef
 
 define dest
-	mkdir -p dest
 	@echo muj dest
 endef
