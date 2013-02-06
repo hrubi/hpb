@@ -1,0 +1,14 @@
+# Directory for building and pre-installing packages.
+# State files are created here too.
+# WORKDIR=$(HOME)/hpb/work
+
+# Directory for storing packages
+# PKGDIR=$(HOME)/hpb/packages
+
+# Directory for keeping downloaded sources
+# SRCDIR=$(HOME)/hpb/sources
+
+# Options to pass to make when building package
+# MAKEOPTS=-j2
+
+# vi: ft=make

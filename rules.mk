@@ -1,56 +1,71 @@
 TOPDIR:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+
+CONFIG=$(TOPDIR)/config.mk
+ifneq ($(wildcard $(CONFIG)),)
+	include $(TOPDIR)/config.mk
+endif
+
 NAME?=$(shell basename $(CURDIR))
 PKGNAME?=$(NAME)-$(VER)
 SRCEXT?=tar.xz
 SRCPKG?=$(PKGNAME).$(SRCEXT)
 SRCURL?=$(URLBASE)/$(SRCPKG)
-SRCDIR?=$(CURDIR)/$(PKGNAME)
-DESTDIR?=$(CURDIR)/dest
+SRCPKGPATH=$(SRCDIR)/$(SRCPKG)
+ifeq ($(WORKDIR),)
+	WORKDIR:=$(CURDIR)/build
+else
+	WORKDIR:=$(WORKDIR)/$(NAME)
+endif
+BUILDDIR?=$(WORKDIR)/$(PKGNAME)
+DESTDIR?=$(WORKDIR)/dest
+SRCDIR?=$(WORKDIR)
 PKGDIR?=$(TOPDIR)/packages
 TARGETPKG?=$(PKGDIR)/$(PKGNAME).tar.xz
 
-STAMP_EXTRACTED=.ex
-STAMP_PATCHED=.pt
-STAMP_CONFIGURED=.cf
-STAMP_BUILT=.bd
-STAMP_DEST=.dd
+STAMP_EXTRACTED=$(WORKDIR)/.ex
+STAMP_PATCHED=$(WORKDIR)/.pt
+STAMP_CONFIGURED=$(WORKDIR)/.cf
+STAMP_BUILT=$(WORKDIR)/.bd
+STAMP_DEST=$(WORKDIR)/.dd
 
-.PHONY: all package fetch extract config build dest clean patch
+.PHONY: all fetch prepare extract patch config build dest package clean
 
 define fetch
-	curl -# -f -C - $(SRCURL) -o $(SRCPKG)
+	mkdir -p $(SRCDIR)
+	curl -# -f -C - $(SRCURL) -o $(SRCPKGPATH)
 endef
 
 define extract
-	tar -xf $^
+	mkdir -p $(WORKDIR)
+	tar -xf $(SRCPKGPATH) -C $(WORKDIR)
 endef
 
 # FIXME - determine -pnum automatically
 define patch
 	@for i in $(PATCHES); do \
 		echo "[PATCH $$i]"; \
-		echo patch -p$(if $(PATCHSTRIP),($PATCHSTRIP),1) -d$(SRCDIR) $$i; \
+		echo patch -p$(if $(PATCHSTRIP),($PATCHSTRIP),1) -d$(BUILDDIR) $$i; \
 	done
 endef
 
 define config
-	cd $(SRCDIR) && \
+	cd $(BUILDDIR) && \
 		$(CFG_VARS) ./configure $(CFG_FLAGS)
 endef
 
 define build
-	cd $(SRCDIR) && \
+	cd $(BUILDDIR) && \
 		make $(MAKEOPTS) $(MAKE_VARS)
 endef
 
 define dest
-	cd $(SRCDIR) && \
+	cd $(BUILDDIR) && \
 		make DESTDIR=$(DESTDIR) $(MAKE_INSTALL_VARS) install
 endef
 
 all: package
 
-fetch: $(SRCPKG)
+fetch: $(SRCPKGPATH)
 extract: $(STAMP_EXTRACTED)
 patch: $(STAMP_PATCHED)
 config: $(STAMP_CONFIGURED)
@@ -59,15 +74,15 @@ dest: $(STAMP_DEST)
 package: $(TARGETPKG)
 
 clean:
-	rm -rf $(TARGETPKG) $(SRCPKG) $(SRCDIR) $(DESTDIR) \
+	rm -rf $(TARGETPKG) $(SRCPKGPATH) $(BUILDDIR) $(DESTDIR) \
 		$(STAMP_EXTRACTED) $(STAMP_PATCHED) $(STAMP_CONFIGURED) \
 		$(STAMP_BUILT) $(STAMP_DEST)
 
-$(SRCPKG):
+$(SRCPKGPATH):
 	@echo [FETCH]
 	$(fetch)
 
-$(STAMP_EXTRACTED): $(SRCPKG)
+$(STAMP_EXTRACTED): $(SRCPKGPATH)
 	@echo [EXTRACT]
 	$(extract)
 	@touch $@
@@ -94,7 +109,7 @@ $(STAMP_DEST): $(STAMP_BUILT)
 	$(dest)
 	@touch $@
 
-$(TARGETPKG): dest
+$(TARGETPKG): $(STAMP_DEST)
 	mkdir -p $(PKGDIR)
 	cd $(DESTDIR) && \
 		tar cJf $@ *
