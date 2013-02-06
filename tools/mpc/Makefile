@@ -1,3 +1,4 @@
+NAME=mpc
 VER=1.0.1
 URLBASE=http://www.multiprecision.org/mpc/download
 SRCEXT=tar.gz

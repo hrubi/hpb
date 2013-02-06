@@ -1,3 +1,4 @@
+NAME=mpfr
 VER=3.1.1
 URLBASE=http://www.mpfr.org/mpfr-current
 CFG_VARS=LDFLAGS="-Wl,-rpath,${FIXME}tools/lib"
