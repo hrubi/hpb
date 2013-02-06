@@ -1,5 +1,5 @@
 VER=5.1.0
-URLBASE=ftp://ftp.gmplib.org/pub/
-CFGFLAGS=CPPGLAGS=-fexceptions
+URLBASE=ftp://ftp.gmplib.org/pub/gmp-${VER}
+CFG_FLAGS=CPPGLAGS=-fexceptions
 
-include ../config.mk
+include ../../rules.mk
