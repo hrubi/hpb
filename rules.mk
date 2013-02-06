@@ -1,4 +1,5 @@
 TOPDIR:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+MKDIR:=$(TOPDIR)/mk
 
 CONFIG=$(TOPDIR)/config.mk
 ifneq ($(wildcard $(CONFIG)),)
