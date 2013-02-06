@@ -1,4 +1,4 @@
-TOPDIR=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+TOPDIR:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 NAME?=$(shell basename $(CURDIR))
 PKGNAME?=$(NAME)-$(VER)
 SRCEXT?=tar.xz
@@ -95,6 +95,7 @@ $(STAMP_DEST): $(STAMP_BUILT)
 	@touch $@
 
 $(TARGETPKG): dest
+	mkdir -p $(PKGDIR)
 	cd $(DESTDIR) && \
 		tar cJf $@ .
 
