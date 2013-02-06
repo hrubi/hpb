@@ -56,10 +56,12 @@ clean:
 
 $(SRCPKGPATH):
 	@echo [FETCH]
+	mkdir -p $(SRCDIR)
 	$(fetch)
 
 $(STAMP_EXTRACTED): $(SRCPKGPATH)
 	@echo [EXTRACT]
+	mkdir -p $(WORKDIR)
 	$(extract)
 	@touch $@
 
@@ -82,10 +84,12 @@ $(STAMP_BUILT): $(STAMP_CONFIGURED)
 
 $(STAMP_DEST): $(STAMP_BUILT)
 	@echo [DEST]
+	mkdir -p $(DESTDIR)
 	$(dest)
 	@touch $@
 
 $(TARGETPKG): $(STAMP_DEST)
+	@echo [PACKAGE]
 	mkdir -p $(PKGDIR)
 	cd $(DESTDIR) && \
 		tar cJf $@ *
@@ -95,12 +99,10 @@ $(TARGETPKG): $(STAMP_DEST)
 # Can be customized in individual makefiles
 
 define fetch
-	mkdir -p $(SRCDIR)
 	curl -# -f -C - $(SRCURL) -o $(SRCPKGPATH)
 endef
 
 define extract
-	mkdir -p $(WORKDIR)
 	tar -xf $(SRCPKGPATH) -C $(WORKDIR)
 endef
 
