@@ -11,3 +11,10 @@ package     - create installable package
 install     - install the package
 
 all         - fetch extract patch configure build package
+
+
+FIXME - don't rebuild dependencies if state file is already created
+eg:
+make extract && rm $(SRCDIR)/$(SRCPKG) && make config
+should go through: fetch -> extract -> rm -> config
+not through:       fetch -> extract -> rm -> fetch -> extract -> config
