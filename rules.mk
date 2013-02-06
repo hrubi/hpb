@@ -2,19 +2,21 @@ TOPDIR:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 CONFIG=$(TOPDIR)/config.mk
 ifneq ($(wildcard $(CONFIG)),)
-	include $(TOPDIR)/config.mk
+include $(TOPDIR)/config.mk
 endif
 
-NAME?=$(shell basename $(CURDIR))
+ifeq ($(NAME),)
+$(error NAME is not defined)
+endif
 PKGNAME?=$(NAME)-$(VER)
 SRCEXT?=tar.xz
 SRCPKG?=$(PKGNAME).$(SRCEXT)
 SRCURL?=$(URLBASE)/$(SRCPKG)
 SRCPKGPATH=$(SRCDIR)/$(SRCPKG)
 ifeq ($(WORKDIR),)
-	WORKDIR:=$(CURDIR)/build
+WORKDIR:=$(CURDIR)/build
 else
-	WORKDIR:=$(WORKDIR)/$(NAME)
+WORKDIR:=$(WORKDIR)/$(NAME)
 endif
 BUILDDIR?=$(WORKDIR)/$(PKGNAME)
 DESTDIR?=$(WORKDIR)/dest
