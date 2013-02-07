@@ -110,7 +110,7 @@ endef
 define patch
 	@for i in $(PATCHES); do \
 		echo "[PATCH $$i]"; \
-		echo patch -p$(if $(PATCHSTRIP),($PATCHSTRIP),1) -d$(BUILDDIR) $$i; \
+		echo patch -p$(if $(PATCHSTRIP),$(PATCHSTRIP),1) -d$(BUILDDIR) $$i; \
 	done
 endef
 
