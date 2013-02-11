@@ -18,7 +18,7 @@ WORKDIR:=$(WORKDIR)/$(NAME)
 endif
 BUILDDIR?=$(WORKDIR)/$(PKGNAME)
 DESTDIR?=$(WORKDIR)/dest
-SRCDIR?=$(WORKDIR)
+SRCDIR?=$(TOPDIR)/sources
 PKGDIR?=$(TOPDIR)/packages
 
 # Package variables
