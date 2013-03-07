@@ -11,6 +11,9 @@
 # Directory to store toolchain
 # TOOLSDIR=$(HOME)/hpb/tools
 
+# Directory for installing packages
+# ROOTDIR=$(HOME)/hpb/rootfs
+
 # Options to pass to make when building package
 # MAKEOPTS=-j2
 
