@@ -100,10 +100,8 @@ $(TARGETPKG): $(STAMP_DEST)
 
 $(STAMP_INSTALL): $(TARGETPKG)
 	@echo [INSTALL]
-	@mkdir -p $(ROOTDIR)
-	$(install)
-	@mkdir -p $(DBDIR)
-	@touch $@
+	@mkdir -p $(ROOTDIR) $(DBDIR)
+	tar -C $(ROOTDIR) -xJvf $(TARGETPKG) > $(STAMP_INSTALL)
 
 # Build steps variables
 # Can be customized in individual makefiles
@@ -137,8 +135,4 @@ endef
 define dest
 	cd $(BUILDDIR) && \
 		make DESTDIR=$(DESTDIR) $(MAKE_INSTALL_VARS) install
-endef
-
-define install
-	tar -C $(ROOTDIR) -xJf $(TARGETPKG)
 endef
