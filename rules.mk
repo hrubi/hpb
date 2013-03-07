@@ -20,7 +20,7 @@ BUILDDIR?=$(WORKDIR)/$(PKGNAME)
 DESTDIR?=$(WORKDIR)/dest
 SRCDIR?=$(TOPDIR)/sources
 PKGDIR?=$(TOPDIR)/packages
-ROOT?=$(TOPDIR)/rootfs
+ROOTDIR?=$(TOPDIR)/rootfs
 
 # Package variables
 PKGNAME?=$(NAME)-$(VER)
