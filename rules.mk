@@ -40,7 +40,7 @@ STAMP_DEST=$(WORKDIR)/.dd
 STAMP_INSTALL=$(DBDIR)/$(PKGNAME)
 
 # Build step targets
-.PHONY: all fetch prepare extract patch config build dest package install clean
+.PHONY: all fetch prepare extract patch config build dest package install uninstall clean
 
 all: package
 
@@ -52,6 +52,17 @@ build: $(STAMP_BUILT)
 dest: $(STAMP_DEST)
 package: $(TARGETPKG)
 install: $(STAMP_INSTALL)
+
+uninstall: $(STAMP_INSTALL)
+	@echo [UNINSTALL]
+	@cd $(ROOTDIR) && \
+	for file in `cat $(STAMP_INSTALL)`; do \
+		if [ -d "$$file" ]; then \
+			continue; \
+		fi; \
+		rm "$$file"; \
+	done
+	rm $(STAMP_INSTALL)
 
 clean:
 	rm -rf $(TARGETPKG) $(BUILDDIR) $(DESTDIR) \
