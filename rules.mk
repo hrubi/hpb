@@ -29,6 +29,7 @@ SRCPKG?=$(PKGNAME).$(SRCEXT)
 SRCURL?=$(URLBASE)/$(SRCPKG)
 SRCPKGPATH=$(SRCDIR)/$(SRCPKG)
 TARGETPKG?=$(PKGDIR)/$(PKGNAME).hrup
+DBDIR?=$(ROOTDIR)/var/db/hpb
 
 # State files
 STAMP_EXTRACTED=$(WORKDIR)/.ex
@@ -36,9 +37,10 @@ STAMP_PATCHED=$(WORKDIR)/.pt
 STAMP_CONFIGURED=$(WORKDIR)/.cf
 STAMP_BUILT=$(WORKDIR)/.bd
 STAMP_DEST=$(WORKDIR)/.dd
+STAMP_INSTALL=$(DBDIR)/$(PKGNAME)
 
 # Build step targets
-.PHONY: all fetch prepare extract patch config build dest package clean
+.PHONY: all fetch prepare extract patch config build dest package install clean
 
 all: package
 
@@ -49,6 +51,7 @@ config: $(STAMP_CONFIGURED)
 build: $(STAMP_BUILT)
 dest: $(STAMP_DEST)
 package: $(TARGETPKG)
+install: $(STAMP_INSTALL)
 
 clean:
 	rm -rf $(TARGETPKG) $(BUILDDIR) $(DESTDIR) \
@@ -95,6 +98,12 @@ $(TARGETPKG): $(STAMP_DEST)
 	cd $(DESTDIR) && \
 		tar cJf $@ *
 
+$(STAMP_INSTALL): $(TARGETPKG)
+	@echo [INSTALL]
+	@mkdir -p $(ROOTDIR)
+	$(install)
+	@mkdir -p $(DBDIR)
+	@touch $@
 
 # Build steps variables
 # Can be customized in individual makefiles
@@ -128,4 +137,8 @@ endef
 define dest
 	cd $(BUILDDIR) && \
 		make DESTDIR=$(DESTDIR) $(MAKE_INSTALL_VARS) install
+endef
+
+define install
+	tar -C $(ROOTDIR) -xJf $(TARGETPKG)
 endef
